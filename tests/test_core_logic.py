@@ -71,3 +71,48 @@ def test_scoring_handles_missing_skills():
     # Low score since no hard skills matched and similarity is low
     assert len(score_data["matched_skills"]) == 0
     assert score_data["final_score"] < 50
+
+def test_empty_resume_handling():
+    # Arrange
+    jd_text = "Looking for a Python developer."
+    resume_text = ""
+    
+    jd_features = extract_features_from_jd(jd_text)
+    resume_features = extract_resume_features(resume_text)
+    
+    # Act
+    score_data = compute_final_score(jd_text, resume_text, jd_features, resume_features)
+    
+    # Assert
+    assert score_data["final_score"] == 0
+    assert len(score_data["matched_skills"]) == 0
+    assert score_data["nlp_similarity"] == 0.0
+
+def test_empty_jd_handling():
+    # Arrange
+    jd_text = ""
+    resume_text = "I am a Python developer."
+    
+    jd_features = extract_features_from_jd(jd_text)
+    resume_features = extract_resume_features(resume_text)
+    
+    # Act
+    score_data = compute_final_score(jd_text, resume_text, jd_features, resume_features)
+    
+    # Assert
+    assert score_data["final_score"] == 0
+    assert len(score_data["matched_skills"]) == 0
+    assert score_data["nlp_similarity"] == 0.0
+
+from services.file_parser import extract_text_from_file
+
+def test_extract_text_from_txt_file():
+    # Arrange
+    filename = "test.txt"
+    file_bytes = b"Hello world! This is a resume."
+    
+    # Act
+    text = extract_text_from_file(filename, file_bytes)
+    
+    # Assert
+    assert text.strip() == "Hello world! This is a resume."

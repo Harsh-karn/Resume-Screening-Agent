@@ -37,18 +37,23 @@ This repository contains an end-to-end Resume Screening Agent built for the ROOM
 
 4. **Configure API Keys**:
    Get a free Google Gemini API key from [Google AI Studio](https://aistudio.google.com/).
-   Set it as an environment variable in your terminal:
-   ```bash
-   # On Windows (PowerShell):
-   $env:GEMINI_API_KEY="your_actual_api_key_here"
-   
-   # On Mac/Linux:
-   export GEMINI_API_KEY="your_actual_api_key_here"
+   Create a `.env` file in the root directory and add your key:
+   ```env
+   GEMINI_API_KEY=AIzaSy...your_actual_key_here
    ```
 
-## Running the Agent
+## Running the Agent (CLI - Recommended)
 
-Start the FastAPI server using Uvicorn:
+The easiest way to test the agent is via the command-line script. It will read the dummy JD and resumes from the `data/` folder, evaluate them using Gemini, rank them, and output a `final_ranked_candidates.json` file.
+
+```bash
+python run_agent.py
+```
+
+## Running the Agent (FastAPI Backend)
+
+Alternatively, you can start the FastAPI backend server to serve this as a REST API.
+
 ```bash
 python main.py
 # Or run using uvicorn directly: uvicorn main:app --reload
@@ -56,7 +61,7 @@ python main.py
 
 The server will start on `http://0.0.0.0:8000`.
 
-## Testing & Sample Inputs/Outputs
+## Testing via API & Sample Inputs/Outputs
 
 A set of dummy data is provided in the `data/` folder:
 - `data/jd.txt`: A sample Job Description for a Python Backend Developer.

@@ -10,7 +10,8 @@ from services.models import CandidateEvaluation
 app = FastAPI(
     title="Resume Screening Agent",
     description="An AI agent to rank resumes against a Job Description",
-    version="1.0.0"
+    version="1.0.0",
+    openapi_version="3.0.2"
 )
 
 # Initialize Gemini API on startup
@@ -23,6 +24,12 @@ async def startup_event():
 
 from services.jd_parser import extract_features_from_jd
 from services.feature_extractor import extract_resume_features
+
+from fastapi.responses import RedirectResponse
+
+@app.get("/", include_in_schema=False)
+async def root():
+    return RedirectResponse(url="/docs")
 
 @app.post("/api/v1/screen-resumes")
 async def screen_resumes(

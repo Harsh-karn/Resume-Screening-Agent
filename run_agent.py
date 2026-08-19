@@ -4,6 +4,9 @@ from services.file_parser import extract_text_from_file
 from services.scoring_engine import compute_final_score
 from services.gemini_service import generate_reasoning, init_gemini
 
+from services.jd_parser import extract_features_from_jd
+from services.feature_extractor import extract_resume_features
+
 def main():
     print("Starting Resume Screening Agent CLI...")
     
@@ -28,6 +31,9 @@ def main():
     print(f"Loaded Job Description from {jd_path}")
     print("Evaluating Resumes (Multi-Stage Pipeline)...\n")
     
+    # 0. JD Feature Extraction
+    jd_features = extract_features_from_jd(job_description)
+    
     results = []
     
     for filename in os.listdir(resumes_dir):
@@ -41,10 +47,13 @@ def main():
             try:
                 resume_text = extract_text_from_file(filename, file_bytes)
                 
-                # 1. NLP Similarity & Scoring Engine
-                score_data = compute_final_score(job_description, resume_text)
+                # 1. Feature Extraction
+                resume_features = extract_resume_features(resume_text)
                 
-                # 2. Gemini Reasoning Engine
+                # 2. NLP Similarity & Scoring Engine
+                score_data = compute_final_score(job_description, resume_text, jd_features, resume_features)
+                
+                # 3. Gemini Reasoning Engine
                 evaluation = generate_reasoning(job_description, resume_text, score_data)
                 
                 # Append to results

@@ -21,6 +21,9 @@ async def startup_event():
     except Exception as e:
         print(f"Warning: Failed to initialize Gemini API: {e}")
 
+from services.jd_parser import extract_features_from_jd
+from services.feature_extractor import extract_resume_features
+
 @app.post("/api/v1/screen-resumes")
 async def screen_resumes(
     job_description: str = Form(...),
@@ -29,6 +32,9 @@ async def screen_resumes(
     if not job_description.strip():
         raise HTTPException(status_code=400, detail="Job description cannot be empty")
         
+    # 0. JD Feature Extraction
+    jd_features = extract_features_from_jd(job_description)
+        
     results = []
     
     for resume in resumes:
@@ -36,10 +42,13 @@ async def screen_resumes(
             file_bytes = await resume.read()
             resume_text = extract_text_from_file(resume.filename, file_bytes)
             
-            # 1. NLP Similarity & Scoring Engine
-            score_data = compute_final_score(job_description, resume_text)
+            # 1. Feature Extraction
+            resume_features = extract_resume_features(resume_text)
             
-            # 2. Gemini Reasoning Engine
+            # 2. NLP Similarity & Scoring Engine
+            score_data = compute_final_score(job_description, resume_text, jd_features, resume_features)
+            
+            # 3. Gemini Reasoning Engine
             evaluation = generate_reasoning(job_description, resume_text, score_data)
             
             results.append({

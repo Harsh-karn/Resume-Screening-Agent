@@ -25,6 +25,8 @@ def generate_reasoning(job_description: str, resume_text: str, score_data: dict)
     final_score = score_data.get("final_score", 0)
     matched_skills = score_data.get("matched_skills", [])
     nlp_similarity = score_data.get("nlp_similarity", 0.0)
+    resume_experience = score_data.get("resume_experience", "Not found.")
+    resume_education = score_data.get("resume_education", "Not found.")
     
     prompt = f"""
     You are an expert HR Technical Recruiter.
@@ -40,6 +42,8 @@ def generate_reasoning(job_description: str, resume_text: str, score_data: dict)
     - Final Score: {final_score}/100
     - NLP Cosine Similarity: {nlp_similarity}%
     - Hard Skills Matched: {matched_skills}
+    - Extracted Experience Block: {resume_experience}
+    - Extracted Education Block: {resume_education}
     
     Your task is to:
     1. Extract a short summary of the candidate's experience.
@@ -60,11 +64,11 @@ def generate_reasoning(job_description: str, resume_text: str, score_data: dict)
         return CandidateEvaluation(**data)
     except Exception as e:
         print(f"Error parsing Gemini response: {e}")
-        # Fallback if Gemini fails entirely
+        # Fallback if Gemini fails entirely (which happens for AQ. internal keys)
         return CandidateEvaluation(
             skills=matched_skills,
-            experience_summary="Could not extract (API Error).",
-            education_summary="Could not extract (API Error).",
+            experience_summary=resume_experience[:200] + "..." if len(resume_experience) > 200 else resume_experience,
+            education_summary=resume_education[:200] + "..." if len(resume_education) > 200 else resume_education,
             score=final_score,
             reasoning=f"Candidate achieved an NLP similarity of {nlp_similarity}% and matched skills: {matched_skills}."
         )

@@ -5,20 +5,20 @@
             "filename": "resume_1_strong.txt",
             "evaluation": {
                 "skills": [
-                    "python",
-                    "fastapi",
-                    "mongodb",
-                    "aws",
                     "docker",
-                    "postgresql",
-                    "git",
+                    "python",
                     "ci/cd",
-                    "django"
+                    "postgresql",
+                    "django",
+                    "git",
+                    "aws",
+                    "mongodb",
+                    "fastapi"
                 ],
-                "experience_summary": "Could not extract (API Error).",
-                "education_summary": "Could not extract (API Error).",
-                "score": 46,
-                "reasoning": "Candidate achieved an NLP similarity of 26.77% and matched skills: ['python', 'fastapi', 'mongodb', 'aws', 'docker', 'postgresql', 'git', 'ci/cd', 'django']."
+                "experience_summary": ":\nSenior Python Developer | Tech Solutions Inc. | 2020 - Present\n- Designed and built RESTful APIs using FastAPI and Django.\n- Managed PostgreSQL and MongoDB databases, optimizing query performance by...",
+                "education_summary": ":\nB.S. in Computer Science, University of Technology (2015-2019)",
+                "score": 53,
+                "reasoning": "Candidate achieved an NLP similarity of 26.77% and matched skills: ['docker', 'python', 'ci/cd', 'postgresql', 'django', 'git', 'aws', 'mongodb', 'fastapi']."
             }
         },
         {
@@ -26,22 +26,22 @@
             "evaluation": {
                 "skills": [
                     "python",
-                    "sql",
-                    "flask"
+                    "flask",
+                    "sql"
                 ],
-                "experience_summary": "Could not extract (API Error).",
-                "education_summary": "Could not extract (API Error).",
-                "score": 19,
-                "reasoning": "Candidate achieved an NLP similarity of 15.78% and matched skills: ['python', 'sql', 'flask']."
+                "experience_summary": ":\nSoftware Engineer | Data Analytics Co. | 2018 - Present\n- Wrote data processing scripts using Python and Pandas.\n- Maintained a small Flask application for internal dashboards.\n- Familiar with SQL q...",
+                "education_summary": ":\nA.S. in Information Technology, Community College (2014-2016)\n\nSkills: Python, Flask, Pandas, MySQL, Bash Scripting.",
+                "score": 27,
+                "reasoning": "Candidate achieved an NLP similarity of 15.78% and matched skills: ['python', 'flask', 'sql']."
             }
         },
         {
             "filename": "resume_2_weak.txt",
             "evaluation": {
                 "skills": [],
-                "experience_summary": "Could not extract (API Error).",
-                "education_summary": "Could not extract (API Error).",
-                "score": 5,
+                "experience_summary": ":\nFrontend Developer | Creative Agency | 2021 - Present\n- Built responsive websites using React and Next.js.\n- Styled components using Tailwind CSS and SCSS.\n- Interacted with REST APIs to fetch data ...",
+                "education_summary": ":\nB.A. in Graphic Design, State University (2016-2020)",
+                "score": 14,
                 "reasoning": "Candidate achieved an NLP similarity of 9.07% and matched skills: []."
             }
         }

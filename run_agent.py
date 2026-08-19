@@ -4,7 +4,7 @@ from services.file_parser import extract_text_from_file
 from services.gemini_service import evaluate_resume
 
 def main():
-    print("🚀 Starting Resume Screening Agent CLI...")
+    print("Starting Resume Screening Agent CLI...")
     
     jd_path = os.path.join("data", "jd.txt")
     resumes_dir = os.path.join("data", "resumes")
@@ -17,8 +17,8 @@ def main():
     with open(jd_path, "r", encoding="utf-8") as f:
         job_description = f.read()
         
-    print(f"✅ Loaded Job Description from {jd_path}")
-    print("🔍 Evaluating Resumes...\n")
+    print(f"Loaded Job Description from {jd_path}")
+    print("Evaluating Resumes...\n")
     
     results = []
     
@@ -40,7 +40,7 @@ def main():
                     "evaluation": evaluation.dict()
                 })
             except Exception as e:
-                print(f"❌ Failed to evaluate {filename}: {e}")
+                print(f"Failed to evaluate {filename}: {e}")
                 
     # Rank candidates by score descending
     results.sort(key=lambda x: x["evaluation"].get("score", 0), reverse=True)
@@ -54,7 +54,7 @@ def main():
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump(output_json, f, indent=4)
         
-    print(f"\n🎉 Done! Ranked list saved to {output_file}")
+    print(f"\nDone! Ranked list saved to {output_file}")
     
     print("\n--- Top Candidate ---")
     if results:

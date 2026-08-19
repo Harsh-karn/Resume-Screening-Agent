@@ -1,0 +1,20 @@
+Jane Smith
+Email: jane.smith@email.com
+
+Summary:
+Enthusiastic front-end developer with a passion for creating beautiful UI/UX.
+
+Education:
+B.A. in Graphic Design, State University (2016-2020)
+
+Experience:
+Frontend Developer | Creative Agency | 2021 - Present
+- Built responsive websites using React and Next.js.
+- Styled components using Tailwind CSS and SCSS.
+- Interacted with REST APIs to fetch data for the frontend.
+
+Freelance Web Developer | 2020 - 2021
+- Created portfolios for small businesses using HTML, CSS, and vanilla JS.
+
+Skills:
+React, Next.js, HTML, CSS, JavaScript, Tailwind, UI/UX Design.

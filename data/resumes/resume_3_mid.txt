@@ -1,0 +1,20 @@
+Alex Lee
+Location: New York, NY
+Phone: (555) 987-6543
+
+Objective: Looking for a backend engineering role.
+
+Experience:
+Software Engineer | Data Analytics Co. | 2018 - Present
+- Wrote data processing scripts using Python and Pandas.
+- Maintained a small Flask application for internal dashboards.
+- Familiar with SQL queries in MySQL.
+
+IT Support Specialist | General Office | 2016 - 2018
+- Managed network infrastructure and hardware troubleshooting.
+- Automated small tasks using Bash and Python.
+
+Education:
+A.S. in Information Technology, Community College (2014-2016)
+
+Skills: Python, Flask, Pandas, MySQL, Bash Scripting.

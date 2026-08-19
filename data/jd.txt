@@ -1,0 +1,25 @@
+Job Title: Python Backend Developer
+Role Type: Full-Time
+Location: Remote
+
+About the Role:
+We are looking for a skilled Python Backend Developer to join our growing engineering team. You will be responsible for designing and building robust, scalable APIs and microservices.
+
+Key Responsibilities:
+- Design and develop backend services using Python and FastAPI or Flask.
+- Integrate backend with databases (PostgreSQL, MongoDB).
+- Collaborate with frontend developers to ensure seamless API integration.
+- Write clean, maintainable, and testable code.
+- Optimize backend architecture for high performance and reliability.
+
+Requirements:
+- Minimum 3 years of professional experience in Python development.
+- Strong proficiency in modern web frameworks (FastAPI, Django, or Flask).
+- Experience with RESTful API design and implementation.
+- Solid understanding of SQL and NoSQL databases.
+- Familiarity with Git, Docker, and CI/CD pipelines.
+- Bachelor's degree in Computer Science or a related field.
+
+Nice to Have:
+- Experience with cloud platforms like AWS or Google Cloud.
+- Knowledge of machine learning integration in production systems.

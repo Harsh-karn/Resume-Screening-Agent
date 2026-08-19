@@ -1,75 +1,66 @@
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
-from fastapi.responses import JSONResponse
-from pydantic import BaseModel
 from typing import List
 import uvicorn
 
 from services.file_parser import extract_text_from_file
-from services.gemini_service import init_gemini, evaluate_resume, CandidateEvaluation
+from services.scoring_engine import compute_final_score
+from services.gemini_service import generate_reasoning, init_gemini
+from services.models import CandidateEvaluation
 
 app = FastAPI(
     title="Resume Screening Agent",
-    description="An AI agent that evaluates resumes against a Job Description using Google Gemini.",
+    description="An AI agent to rank resumes against a Job Description",
     version="1.0.0"
 )
 
-# Initialize Gemini on startup
+# Initialize Gemini API on startup
 @app.on_event("startup")
-def startup_event():
+async def startup_event():
     try:
         init_gemini()
-        print("Gemini API initialized successfully.")
     except Exception as e:
-        print(f"Warning on startup: {e}")
+        print(f"Warning: Failed to initialize Gemini API: {e}")
 
-class RankedCandidate(BaseModel):
-    filename: str
-    evaluation: CandidateEvaluation
-
-class RankingResponse(BaseModel):
-    job_description: str
-    candidates: List[RankedCandidate]
-
-@app.post("/api/v1/screen-resumes", response_model=RankingResponse)
+@app.post("/api/v1/screen-resumes")
 async def screen_resumes(
-    job_description: str = Form(..., description="The Job Description text to evaluate against."),
-    resumes: List[UploadFile] = File(..., description="List of resume files (PDF, DOCX, TXT).")
+    job_description: str = Form(...),
+    resumes: List[UploadFile] = File(...)
 ):
-    """
-    Endpoint to evaluate and rank a list of resumes against a given Job Description.
-    """
-    if not resumes:
-        raise HTTPException(status_code=400, detail="No resumes provided.")
-
-    ranked_candidates = []
+    if not job_description.strip():
+        raise HTTPException(status_code=400, detail="Job description cannot be empty")
+        
+    results = []
     
     for resume in resumes:
         try:
             file_bytes = await resume.read()
             resume_text = extract_text_from_file(resume.filename, file_bytes)
             
-            # Evaluate using Gemini
-            evaluation = evaluate_resume(job_description, resume_text)
+            # 1. NLP Similarity & Scoring Engine
+            score_data = compute_final_score(job_description, resume_text)
             
-            ranked_candidates.append(
-                RankedCandidate(
-                    filename=resume.filename,
-                    evaluation=evaluation
-                )
-            )
+            # 2. Gemini Reasoning Engine
+            evaluation = generate_reasoning(job_description, resume_text, score_data)
+            
+            results.append({
+                "filename": resume.filename,
+                "evaluation": evaluation.model_dump()
+            })
         except Exception as e:
-            # You might want to log this and continue with other files, 
-            # but for simplicity, we'll raise an HTTP exception or just append the error
-            print(f"Error processing {resume.filename}: {e}")
-            raise HTTPException(status_code=500, detail=f"Failed to process {resume.filename}: {str(e)}")
+            results.append({
+                "filename": resume.filename,
+                "error": str(e)
+            })
             
-    # Sort candidates by score descending
-    ranked_candidates.sort(key=lambda x: x.evaluation.score, reverse=True)
+    # Sort by score descending
+    results.sort(key=lambda x: x.get("evaluation", {}).get("score", 0), reverse=True)
     
-    return RankingResponse(
-        job_description=job_description,
-        candidates=ranked_candidates
-    )
+    output_json = {
+        "job_description_snippet": job_description[:100] + "...",
+        "candidates": results
+    }
+    
+    return output_json
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run(app, host="0.0.0.0", port=8000)

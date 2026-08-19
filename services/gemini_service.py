@@ -19,12 +19,16 @@ def init_gemini():
         raise ValueError("GEMINI_API_KEY environment variable is missing. Please set it before running.")
     genai.configure(api_key=api_key)
 
-def evaluate_resume(job_description: str, resume_text: str) -> CandidateEvaluation:
+def generate_reasoning(job_description: str, resume_text: str, score_data: dict) -> CandidateEvaluation:
     model = genai.GenerativeModel('gemini-1.5-flash', generation_config={"response_mime_type": "application/json"})
+    
+    final_score = score_data.get("final_score", 0)
+    matched_skills = score_data.get("matched_skills", [])
+    nlp_similarity = score_data.get("nlp_similarity", 0.0)
     
     prompt = f"""
     You are an expert HR Technical Recruiter.
-    Your task is to evaluate the provided Resume against the provided Job Description.
+    We have already calculated a relevance score for this candidate using an NLP Engine and a Scoring Engine.
     
     Job Description:
     {job_description}
@@ -32,16 +36,22 @@ def evaluate_resume(job_description: str, resume_text: str) -> CandidateEvaluati
     Resume:
     {resume_text}
     
-    Please extract the candidate's skills, a short summary of their experience, and a short summary of their education.
-    Then, compute a relevance score from 0 to 100 based on how well the candidate's resume matches the Job Description.
-    Finally, provide a clear reasoning for the score.
+    Pre-Calculated Metrics:
+    - Final Score: {final_score}/100
+    - NLP Cosine Similarity: {nlp_similarity}%
+    - Hard Skills Matched: {matched_skills}
+    
+    Your task is to:
+    1. Extract a short summary of the candidate's experience.
+    2. Extract a short summary of the candidate's education.
+    3. Provide a clear, concise reasoning for why this candidate received a score of {final_score}/100 based on the metrics above and the resume contents.
     
     Return the result strictly as a JSON object with the following keys:
-    - "skills": A list of strings representing extracted skills.
+    - "skills": The list of Hard Skills Matched provided above.
     - "experience_summary": A string summarizing their experience.
     - "education_summary": A string summarizing their education.
-    - "score": An integer between 0 and 100.
-    - "reasoning": A concise string explaining why this score was given.
+    - "score": The Final Score provided above as an integer.
+    - "reasoning": A concise string explaining why this score makes sense.
     """
     
     try:
@@ -50,4 +60,11 @@ def evaluate_resume(job_description: str, resume_text: str) -> CandidateEvaluati
         return CandidateEvaluation(**data)
     except Exception as e:
         print(f"Error parsing Gemini response: {e}")
-        raise ValueError("Failed to parse Gemini API response as expected JSON.")
+        # Fallback if Gemini fails entirely
+        return CandidateEvaluation(
+            skills=matched_skills,
+            experience_summary="Could not extract (API Error).",
+            education_summary="Could not extract (API Error).",
+            score=final_score,
+            reasoning=f"Candidate achieved an NLP similarity of {nlp_similarity}% and matched skills: {matched_skills}."
+        )

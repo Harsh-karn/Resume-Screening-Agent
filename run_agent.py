@@ -1,7 +1,8 @@
 import os
 import json
 from services.file_parser import extract_text_from_file
-from services.gemini_service import evaluate_resume, init_gemini
+from services.scoring_engine import compute_final_score
+from services.gemini_service import generate_reasoning, init_gemini
 
 def main():
     print("Starting Resume Screening Agent CLI...")
@@ -25,7 +26,7 @@ def main():
         job_description = f.read()
         
     print(f"Loaded Job Description from {jd_path}")
-    print("Evaluating Resumes...\n")
+    print("Evaluating Resumes (Multi-Stage Pipeline)...\n")
     
     results = []
     
@@ -39,12 +40,17 @@ def main():
                 
             try:
                 resume_text = extract_text_from_file(filename, file_bytes)
-                evaluation = evaluate_resume(job_description, resume_text)
+                
+                # 1. NLP Similarity & Scoring Engine
+                score_data = compute_final_score(job_description, resume_text)
+                
+                # 2. Gemini Reasoning Engine
+                evaluation = generate_reasoning(job_description, resume_text, score_data)
                 
                 # Append to results
                 results.append({
                     "filename": filename,
-                    "evaluation": evaluation.dict()
+                    "evaluation": evaluation.model_dump()
                 })
             except Exception as e:
                 print(f"Failed to evaluate {filename}: {e}")

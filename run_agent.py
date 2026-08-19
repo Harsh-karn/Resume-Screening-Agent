@@ -1,10 +1,17 @@
 import os
 import json
 from services.file_parser import extract_text_from_file
-from services.gemini_service import evaluate_resume
+from services.gemini_service import evaluate_resume, init_gemini
 
 def main():
     print("Starting Resume Screening Agent CLI...")
+    
+    # Initialize Gemini API configuration
+    try:
+        init_gemini()
+    except ValueError as e:
+        print(f"Configuration Error: {e}")
+        return
     
     jd_path = os.path.join("data", "jd.txt")
     resumes_dir = os.path.join("data", "resumes")

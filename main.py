@@ -26,6 +26,28 @@ from services.jd_parser import extract_features_from_jd
 from services.feature_extractor import extract_resume_features
 
 from fastapi.responses import RedirectResponse
+from fastapi.openapi.utils import get_openapi
+
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title="Resume Screening Agent",
+        version="1.0.0",
+        description="An AI agent to rank resumes against a Job Description",
+        routes=app.routes,
+    )
+    # Swagger UI workaround for List[UploadFile] rendering bug
+    try:
+        props = openapi_schema["components"]["schemas"]["Body_screen_resumes_api_v1_screen_resumes_post"]["properties"]
+        props["resumes"]["items"]["format"] = "binary"
+    except KeyError:
+        pass
+        
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+app.openapi = custom_openapi
 
 @app.get("/", include_in_schema=False)
 async def root():

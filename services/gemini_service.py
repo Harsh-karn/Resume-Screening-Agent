@@ -3,6 +3,7 @@ import json
 import google.generativeai as genai
 from pydantic import BaseModel
 from typing import List
+from dotenv import load_dotenv
 
 class CandidateEvaluation(BaseModel):
     skills: List[str]
@@ -12,6 +13,7 @@ class CandidateEvaluation(BaseModel):
     reasoning: str
 
 def init_gemini():
+    load_dotenv()
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
         raise ValueError("GEMINI_API_KEY environment variable is missing. Please set it before running.")

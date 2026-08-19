@@ -1,5 +1,7 @@
 import os
+# pyrefly: ignore [missing-import]
 from pypdf import PdfReader
+# pyrefly: ignore [missing-import]
 import docx
 
 def parse_txt(file_bytes: bytes) -> str:

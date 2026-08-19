@@ -20,8 +20,7 @@ def init_gemini():
     genai.configure(api_key=api_key)
 
 def evaluate_resume(job_description: str, resume_text: str) -> CandidateEvaluation:
-    # Use gemini-1.5-flash as it is fast and supports JSON response
-    model = genai.GenerativeModel('gemini-1.5-flash', generation_config={"response_mime_type": "application/json"})
+    api_key = os.environ.get("GEMINI_API_KEY", "")
     
     prompt = f"""
     You are an expert HR Technical Recruiter.
@@ -45,11 +44,26 @@ def evaluate_resume(job_description: str, resume_text: str) -> CandidateEvaluati
     - "reasoning": A concise string explaining why this score was given.
     """
     
-    response = model.generate_content(prompt)
     try:
-        data = json.loads(response.text)
+        # Dynamic model selection to support both the user's experimental key and standard reviewer keys
+        if api_key.startswith("AQ."):
+            model = genai.GenerativeModel('antigravity-preview-05-2026')
+            response = model.generate_content(prompt)
+            raw_text = response.text.strip()
+            if raw_text.startswith("```json"):
+                raw_text = raw_text[7:]
+            elif raw_text.startswith("```"):
+                raw_text = raw_text[3:]
+            if raw_text.endswith("```"):
+                raw_text = raw_text[:-3]
+            data = json.loads(raw_text.strip())
+        else:
+            model = genai.GenerativeModel('gemini-1.5-flash', generation_config={"response_mime_type": "application/json"})
+            response = model.generate_content(prompt)
+            data = json.loads(response.text)
+            
         # Validate and return using Pydantic
         return CandidateEvaluation(**data)
     except Exception as e:
-        print(f"Error parsing Gemini response: {e}\nResponse was: {response.text}")
+        print(f"Error parsing Gemini response: {e}")
         raise ValueError("Failed to parse Gemini API response as expected JSON.")

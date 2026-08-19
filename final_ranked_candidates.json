@@ -1,4 +1,59 @@
 {
     "job_description_snippet": "Job Title: Python Backend Developer\nRole Type: Full-Time\nLocation: Remote\n\nAbout the Role:\nWe are lo...",
-    "candidates": []
+    "candidates": [
+        {
+            "filename": "resume_1_strong.txt",
+            "evaluation": {
+                "skills": [
+                    "Python",
+                    "FastAPI",
+                    "Django",
+                    "PostgreSQL",
+                    "MongoDB",
+                    "AWS",
+                    "Docker",
+                    "Git",
+                    "CI/CD"
+                ],
+                "experience_summary": "4+ years as a Backend Developer specializing in Python, FastAPI, and Django. Extensive experience optimizing PostgreSQL and MongoDB databases, alongside robust deployment skills using Docker, AWS ECS, and GitHub Actions.",
+                "education_summary": "B.S. in Computer Science from University of Technology (2015-2019).",
+                "score": 95,
+                "reasoning": "Candidate perfectly aligns with the requirements, boasting strong backend Python experience (FastAPI, Django), database proficiency (PostgreSQL, MongoDB), and cloud infrastructure knowledge."
+            }
+        },
+        {
+            "filename": "resume_3_mid.txt",
+            "evaluation": {
+                "skills": [
+                    "Python",
+                    "Flask",
+                    "Pandas",
+                    "MySQL",
+                    "Bash Scripting"
+                ],
+                "experience_summary": "Over 5 years of professional IT and software engineering experience. Worked on data processing scripts in Python, maintained internal Flask applications, and wrote automated bash scripts.",
+                "education_summary": "A.S. in Information Technology from Community College (2014-2016).",
+                "score": 65,
+                "reasoning": "Candidate has some foundational Python and Flask experience, but lacks modern backend architecture skills like FastAPI, NoSQL, CI/CD, and Docker. Education is below the required Bachelor's degree in Computer Science."
+            }
+        },
+        {
+            "filename": "resume_2_weak.txt",
+            "evaluation": {
+                "skills": [
+                    "React",
+                    "Next.js",
+                    "HTML",
+                    "CSS",
+                    "JavaScript",
+                    "Tailwind",
+                    "UI/UX Design"
+                ],
+                "experience_summary": "3 years of experience as a Frontend Developer building responsive websites with React, Next.js, and interacting with REST APIs.",
+                "education_summary": "B.A. in Graphic Design from State University (2016-2020).",
+                "score": 10,
+                "reasoning": "Candidate is entirely focused on front-end development (React/Next.js). They have zero Python backend experience, completely missing the core requirements of the job description."
+            }
+        }
+    ]
 }
